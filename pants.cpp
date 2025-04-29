@@ -1,6 +1,6 @@
 #include "pants.h"
 
-pants::pants(std::string clothing_type, std::string brand, double price, double rating, double waist_size, double hip_length) : product(clothing_type, brand, price, rating)
+pants::pants(std::string clothing_type, std::string brand, double price, double rating, int quantity, double waist_size, double hip_length) : product(clothing_type, brand, price, rating, quantity)
 {
 	set_waist_size(waist_size);
 	set_hip_length(hip_length);
@@ -37,5 +37,5 @@ void pants::set_hip_length(double hip_length)
 }
 
 void pants::print() const {
-	std::cout << "|" << brand << "| Pants with Waist size " << waist_size << "\" and Hip length " << hip_length << "\": $" << price << " (Rated " << rating << " out of 5 stars)" << std::endl;
+	std::cout << "|" << brand << "| Pants with Waist size " << waist_size << "\" and Hip length " << hip_length << "\" for $" << price << " (Rated " << rating << " out of 5 stars) <" << quantity << " left in stock!>" << std::endl;
 }

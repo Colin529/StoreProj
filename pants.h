@@ -7,7 +7,7 @@ protected:
 	double hip_length = 0;
 
 public:
-	pants(std::string clothing_type, std::string brand, double price, double rating, double waist_size, double hip_length);
+	pants(std::string clothing_type, std::string brand, double price, double rating, int quantity, double waist_size, double hip_length);
 
 	double get_waist_size() const;
 	double get_hip_length() const;

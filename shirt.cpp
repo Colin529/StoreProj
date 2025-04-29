@@ -1,6 +1,6 @@
 #include "shirt.h"
 
-shirt::shirt(std::string clothing_type, std::string brand, double price, double rating, double collar_size, double sleeve_length) : product(clothing_type, brand, price, rating) {
+shirt::shirt(std::string clothing_type, std::string brand, double price, double rating, int quantity, double collar_size, double sleeve_length) : product(clothing_type, brand, price, rating, quantity) {
 	set_collar_size(collar_size);
 	set_sleeve_length(sleeve_length);
 }
@@ -36,5 +36,5 @@ void shirt::set_sleeve_length(double sleeve_length)
 }
 
 void shirt::print() const {
-	std::cout << "|" << brand << "| Dress Shirt with Collar size " << collar_size << "\" and Sleeve length " << sleeve_length << "\": $" << price << " (Rated " << rating << " out of 5 stars)" << std::endl;
+	std::cout << "|" << brand << "| Dress Shirt with Collar size " << collar_size << "\" and Sleeve length " << sleeve_length << "\" for $" << price << " (Rated " << rating << " out of 5 stars) <" << quantity << " left in stock!>" << std::endl;
 }

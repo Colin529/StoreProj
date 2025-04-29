@@ -5,18 +5,13 @@ product::product() {
 }
 
 
-product::product(std::string clothing_type, std::string brand, double price, double rating) {
+product::product(std::string clothing_type, std::string brand, double price, double rating, int quantity) {
 	set_clothing_type(clothing_type);
 	set_brand(brand);
 	set_price(price);
 	set_rating(rating);
-
+	set_quantity(quantity);
 }
-
-//std::string product::get_clothing_type() const
-//{
-//	return clothing_type;
-//}
 
 std::string product::get_clothing_type() const
 {
@@ -36,6 +31,11 @@ double product::get_price() const
 double product::get_rating() const
 {
 	return rating;
+}
+
+int product::get_quantity() const
+{
+	return quantity;
 }
 
 void product::set_clothing_type(const std::string& clothing_type)
@@ -75,6 +75,16 @@ void product::set_rating(double rating)
 	}
 	else {
 		throw std::exception("Rating must be between 0 and 5 stars");
+	}
+}
+
+void product::set_quantity(int quantity)
+{
+	if (quantity >= 0 && quantity <= 100) {
+		this->quantity = quantity;
+	}
+	else {
+		throw std::exception("Quantity must be between 0 and 100");
 	}
 }
 
