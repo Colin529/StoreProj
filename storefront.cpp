@@ -2,11 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <set>
 #include <map>
-
-//DELETE ALL READ FILE LINES, CAN USE VECTOR .SIZE METHOD
-
+#include <set>
 
 #include "product.h"
 #include "shirt.h"
@@ -18,8 +15,47 @@
 
 #include "login.h"
 
-std::vector<product*> read_store(const std::string& path) {
-	std::vector<product*> storefront;
+int get_line_count(const std::string& path) {
+	std::ifstream stream;
+	stream.open(path);
+
+	int count = 0;
+
+	if (stream.is_open()) {
+		std::string line;
+
+		while (std::getline(stream, line)) {
+			count++;
+		}
+
+		stream.close();
+	}
+
+	return count;
+}
+
+void write() {
+	const std::string path = "Data/userinfo.csv";
+
+	std::ofstream output;
+	output.open(path);
+
+	if (output.is_open()) {
+		output << "Yo,Check,This,Out,!" << std::endl;
+		std::cout << "Success!";
+	}
+	else {
+		std::cout << "Failure...";
+	}
+}
+
+//WHEN READING FROM FILE, NAME SECTIONS 'FIELD1', 'FIELD2', ETC.
+//TO TURN EACH LINE INTO ITS CORRECT CLASS, DO A SWITCH CASE TO SEE IF FIELDS ARE EQUAL TO CERTAIN VALUES
+//THEN STORE THEM AS THEIR CLASS INSIDE OF AN ARRAY OF PRODUCTS
+
+product** read_storefront(const std::string& path, int count) {
+	product** storefront = new product*[count];
+
 	std::ifstream stream;
 	stream.open(path);
 
@@ -28,12 +64,8 @@ std::vector<product*> read_store(const std::string& path) {
 
 		std::getline(stream, line); //skips header row
 
-		for (;;) { //forever loop
-			if (stream.eof()) { //checks if there is no more lines
-				std::cout << "Successfully read storefront data." << std::endl;
-				stream.close();
-				return storefront;
-			}
+		for (int i = 0; i < count; i++) {
+
 			std::getline(stream, line, ',');
 			std::string clothing_type = line;
 
@@ -46,69 +78,70 @@ std::vector<product*> read_store(const std::string& path) {
 			std::getline(stream, line, ',');
 			double rating = stod(line);
 
-			char char_field_one='a';
-			double num_field_one = 0;	//creates distinction between underwear's first field and all other first fields
+			bool char_detected = false;
+			char char_field_one;
+			double num_field_one = 0;
 
 			std::getline(stream, line, ',');
 			std::string temp = line;
-			if (temp.length() == 1) {	//checks to see if the taken string is only one character
+			if (temp.length() == 1) {
 				char new_temp = temp[0];
-				if (new_temp == 'S' || new_temp == 'M' || new_temp == 'L' || new_temp == 'X') {	//verifies that its a valid underwear size/not just a single digit number
+				if (new_temp == 'S' || new_temp == 'M' || new_temp == 'L' || new_temp == 'X') {
 					char_field_one = new_temp;
+					char_detected = true;
 				}
 				else {
-					num_field_one = std::stod(temp);	//will throw an exception if a letter character sneaks in, but this shouldn't happen if file is correct
+					num_field_one = std::stod(temp);
+					char_detected = false;
 				}
 			}
 			else {
-				num_field_one = std::stod(line);	//all other clothing types will fall in here
+				num_field_one = std::stod(line);
+				char_detected = false;
 			}
 			std::getline(stream, line, ',');
 			double num_field_two = std::stod(line);
 
 			std::getline(stream, line);
 			int quantity = std::stoi(line);
-			//BIG if else chain, would love to simplify with switch but...doesn't work with string and i dont want to try enum rn...
+
+			//std::getline(stream, line); //no comma because end of line
+			//std::string checked_out = line;
+
+			if (char_detected) {
+				if (clothing_type == "underwear") {
+					storefront[i] = new underwear(clothing_type, brand, price, rating, quantity, char_field_one, num_field_two);
+				}
+			}
+			else {
 				if (clothing_type == "shirt") {
-					storefront.push_back(new shirt(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two));
+					storefront[i] = new shirt(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two);
 				}
 				if (clothing_type == "pants") {
-					storefront.push_back(new pants(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two));
+					storefront[i] = new pants(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two);
 				}
 				if (clothing_type == "socks") {
-					storefront.push_back(new socks(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two));
-				}
-				if (clothing_type == "underwear") {
-					storefront.push_back(new underwear(clothing_type, brand, price, rating, quantity, char_field_one, num_field_two));
+					storefront[i] = new socks(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two);
 				}
 				if (clothing_type == "shoes") {
-					storefront.push_back(new shoes(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two));
+					storefront[i] = new shoes(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two);
 				}
 				if (clothing_type == "hat") {
-					storefront.push_back(new hat(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two));
+					storefront[i] = new hat(clothing_type, brand, price, rating, quantity, num_field_one, num_field_two);
 				}
-
-				//below lines are for printing for verification
-				/*std::cout << clothing_type << ", " <<
-					brand << ", " <<
-					price << ", " <<
-					rating << ", ";
-					if (clothing_type == "underwear") { char_field_one; } else {num_field_one;}
-					std::cout << ", " <<
-					num_field_two << ", " <<
-					quantity << ", " << std::endl;*/
+			}
+			
 
 		}
 		std::cout << "Successfully read storefront data." << std::endl;
 		stream.close();
 
 	}
-	else {	//throws exception to stop program from breaking without a correct file
-		std::cout << "Failed to read from file--aborting proccess!";
-		throw std::exception("Failed to read from designated file");
-	}
+
 	return storefront;
+
 }
+
 enum class admin_status {
 	N,
 	Y,
@@ -123,10 +156,6 @@ char admin_to_char(admin_status a) {
 }
 std::vector<login> read_userinfo(const std::string& path) {
 	std::vector<login> users;
-	
-
-	
-
 	std::ifstream stream;
 	stream.open(path);
 
@@ -135,7 +164,7 @@ std::vector<login> read_userinfo(const std::string& path) {
 
 		std::getline(stream, line); //skips header row
 
-		for (;;) {
+		for (int i=0; i<get_line_count(path)-1; i++) {
 			if (stream.eof()) {
 				std::cout << "Successfully read user information." << std::endl;
 				stream.close();
@@ -153,254 +182,240 @@ std::vector<login> read_userinfo(const std::string& path) {
 			users.push_back(login(user, password, admin_to_char(admin)));	//admin to char will return N/Y/C which can be read for the login object
 			//and yes, I know, it was easier with just getting a character, but...i have to prove knowledge of enums so...
 		}
-		
+
 		std::cout << "Successfully read user information." << std::endl;
 		stream.close();
 	}
 	else {	//throws exception to prevent program from breaking
 		std::cout << "Failed to read from file--aborting proccess!";
-		throw std::exception("Failed to read from designated file");
+		//throw std::exception("Failed to read from designated file");
 	}
+	return users;
 }
 
-login enter_password(std::vector<login> users, login user) {
-	std::cout << "Please enter your password: ";
-	std::string password;
-	std::getline(std::cin, password);
-	if (password == user.get_password()) {
-		if (user.get_user() == "Karasu" || user.get_user() == "Colin") {
-			std::cout << "Welcome, creator! Have fun :D" << std::endl;
-		}
-		else if (user.get_is_admin() == 'Y') {
-			std::cout << "Welcome, Admin " << user.get_user() << "!" << std::endl;
-		}
-		else {
-			std::cout << "Welcome, " << user.get_user() << "!" << std::endl;
-		}
-		return user;
-	}
-	std::cout << "Incorrect password. Please try again." << std::endl;
-	return enter_password(users, user);
-}
+void write_to_userbase(std::vector<login> users, const std::string path) {
 
-login enter_username(std::vector<login> users) {
-	std::cout << "Please enter your username: ";
-	std::string username;
-	std::getline(std::cin, username);
-	if (username.length() == 0) {
-		std::cout << "User not found. Please try again." << std::endl;
-		return enter_username(users);
-	}
-	else {
-		for (int i = 0; i < users.size(); i++) {
-			if (username == users[i].get_user()) {
-				login user = users[i];
-				login confirm = enter_password(users, user);
-				return confirm;
-			}
-		}
-		std::cout << "User not found. Please try again." << std::endl;
-		return enter_username(users);
-	}
+	std::ofstream output;
 	
-}
-
-void create_account(std::vector<login>& users) {
-	std::cout << "Please enter the username you want to use. It can't be less than three characters, or more than 20." << std::endl;
-	bool valid_username = false;
-	bool unique_username = false;
-	std::string new_username;
-	while (valid_username == false&&unique_username==false) {	//continueously checks if the username is valid and unique
-		std::getline(std::cin, new_username);
-		if (new_username.length() < 3) {
-			std::cout << "Your username must be at least 3 characters! Please enter a valid username." << std::endl;
-			return create_account(users);
+	output.open(path);
+		if (output.is_open()) {
+				output << "username,password,admin" << std::endl;
+				for (int i = 0; i < users.size(); i++) {
+					output << users[i].get_user() << "," << users[i].get_password() << "," << users[i].get_is_admin() << std::endl;
+				}
 		}
 		else {
-			valid_username = true;
+				std::cout << "Failed to write to file" << std::endl;
 		}
-		for (int i = 0; i < users.size(); i++) {
-			if (users[i].get_user() == new_username) {
-				std::cout << "This username is already in use! Please try again." << std::endl;
-				return create_account(users);
-			}
-			if (i == users.size()) {
-				unique_username = true;
-			}
-		}
-	}
-	std::cout << "Alright, " << new_username << ", please enter a password. It must be 6-25 characters." << std::endl;
-	bool valid_password = false;
-	while (valid_password == false) {	//continueously checks if the password is valid
-		std::string new_password;
-		std::getline(std::cin, new_password);
-		if (new_password.length() < 6) {
-			std::cout << "Your password must be at least 6 characters! Please enter a valid password." << std::endl;
-		}
-		else {
-			users.push_back(login(new_username, new_password, 'N'));
-			std::cout << "Awesome! Please log in with your information now." << std::endl;
-			valid_password = true;
-		}
-	}
-}
-
-void write_to_storefront(std::vector<product*> store) {
-	const std::string path = "Data/products.csv";
-
-	std::ofstream output;
-	output.open(path);
-
-	if (output.is_open()) {
-		output << "Clothing type,Brand,Price,Rating,Field one,Field two,Quantity" << std::endl;
-		for (int i = 0; i < store.size(); i++) {
-			output << store[i]->get_clothing_type() << ",";
-			output << store[i]->get_brand() << ",";
-			output << store[i]->get_price() << ",";
-			output << store[i]->get_rating() << ",";
-			//LONG IF ELSE CHAIN PLEASE CHECK IF THIS CAN BE SIMPLIFIED
-			if (shirt* shirtptr = dynamic_cast<shirt*>(store[i])) {
-				output << shirtptr->get_collar_size() << ",";
-			}
-			else if (pants* pantsptr = dynamic_cast<pants*>(store[i])) {
-				output << pantsptr->get_waist_size() << ",";
-			}
-			else if (socks* socksptr = dynamic_cast<socks*>(store[i])) {
-				output << socksptr->get_sock_height() << ",";
-			}
-			else if (underwear* underwearptr = dynamic_cast<underwear*>(store[i])) {
-				output << underwearptr->get_underwear_size() << ",";
-			}
-			else if (shoes* shoesptr = dynamic_cast<shoes*>(store[i])) {
-				output << shoesptr->get_shoe_width() << ",";
-			}
-			else if (hat* hatptr = dynamic_cast<hat*>(store[i])) {
-				output << hatptr->get_hat_height() << ",";
-			}
-			//SAME FOR THIS ONE
-			if (shirt* shirtptr = dynamic_cast<shirt*>(store[i])) {
-				output << shirtptr->get_sleeve_length() << ",";
-			}
-			else if (pants* pantsptr = dynamic_cast<pants*>(store[i])) {
-				output << pantsptr->get_hip_length() << ",";
-			}
-			else if (socks* socksptr = dynamic_cast<socks*>(store[i])) {
-				output << socksptr->get_sock_length() << ",";
-			}
-			else if (underwear* underwearptr = dynamic_cast<underwear*>(store[i])) {
-				output << underwearptr->get_trunk_size() << ",";
-			}
-			else if (shoes* shoesptr = dynamic_cast<shoes*>(store[i])) {
-				output << shoesptr->get_shoe_length() << ",";
-			}
-			else if (hat* hatptr = dynamic_cast<hat*>(store[i])) {
-				output << hatptr->get_brim_width() << ",";
-			}
-			output << store[i]->get_quantity() << ',';
-			if (i != store.size() - 1) {//prevents issue with extra line breaking program
-				output << std::endl;	
-			}
-		}
-		std::cout << "Storefront information saved." << std::endl;
-	}
-	else {
-		std::cout << "Failed to write to file...Data may have been lost.";
-	}
-}
-
-void write_to_user_info(std::vector<login> users) {
-	const std::string path = "Data/userinfo.csv";
-
-	std::ofstream output;
-	output.open(path);
-
-	if (output.is_open()) {
-		output << "Username,Password,is_admin" << std::endl;
-		for (int i = 0; i < users.size(); i++) {
-			output << users[i].get_user() << ",";
-			output << users[i].get_password() << ",";
-			output << users[i].get_is_admin();
-			if (i!=users.size()-1) {//prevents issue with extra line breaking program
-				output << std::endl;	
-			}
-		}
-		std::cout << "Users information saved." << std::endl;
-	}
-	else {
-		std::cout << "Failed to save user information...Data may have been lost--contact an administrator!" << std::endl;
-	}
+	
+	output.close();
 }
 
 
 int main() {
-	const std::string path = "Data/products.csv";
+	const std::string PROD_PATH = "Data/products.csv";
+	int file_length = get_line_count(PROD_PATH)-1;
 
-	const std::string userinfo = "Data/userinfo.csv";
+	const std::string USER_INFO = "Data/userinfo.csv";
+	int user_count = get_line_count(USER_INFO) - 1;
 
-	std::vector<login> users = read_userinfo(userinfo);
+	std::vector<login> users = read_userinfo(USER_INFO);
 
-	std::vector<product*> store = read_store(path);
-	//asks for login info, if no, asks for account creation. make this a function maybe?
-	login current_user;
-	std::cout << "Do you currently have an account? Y/y or N/n: ";
-	std::string account_confirm;
-	std::getline(std::cin, account_confirm);
-	if (account_confirm == "Y" || account_confirm == "y") {
-		current_user = enter_username(users);
-	}
-	else if (account_confirm == "N" || account_confirm == "n") {
-		std::cout << "Okay, would you like to create an account? ";
-		std::string confirm;
-		std::getline(std::cin, confirm);
-		if (confirm == "Y" || confirm == "y") {
-			create_account(users);
-			current_user = enter_username(users);
+	product** storefront = read_storefront(PROD_PATH, file_length);
+
+	std::string action_str;
+	char action;
+	bool flag = false;
+
+	//username and signup loop
+	do {
+		std::cout << "--WELCOME--" << std::endl;
+		std::cout << "Enter 'l' to login,'s' to signup, or 'q' to quit the application" << std::endl;
+		std::cout << "Enter Command: ";
+		std::getline(std::cin, action_str);
+		action = action_str[0];
+
+		std::string username;
+		std::string password;
+		switch (action) {
+		case 'l':
+			std::cout << "--LOGIN--" << std::endl;
+			std::cout << "Enter Username: ";
+			std::getline(std::cin, username);
+			std::cout << "Enter Password: ";
+			std::getline(std::cin, password);
+			
+			for (int i = 0; i < user_count; i++) {
+				if (users[i].get_user() == username && users[i].get_password() == password) {
+					std::cout << "LOGIN SUCCESSFUL" << std::endl;
+					flag = true;
+				}
+			}
+
+			break;
+
+		case 's': {
+			std::cout << "--SIGNUP--" << std::endl;
+			std::cout << "Enter Username: ";
+			std::getline(std::cin, username);
+			std::cout << "Enter Password: ";
+			std::getline(std::cin, password);
+
+			login l1(username, password, 0);
+			users.push_back(l1);
+
+			flag = true;
+			break;
 		}
-		else if (confirm == "N" || confirm == "n") {
-			std::cout << "Okay! Enjoy your visit!" << std::endl;
-			current_user = login("Default", "qqqqqq", 'N');
+		case 'q':
+			std::cout << "EXITING TERMINAL" << std::endl;
+		default:
+			std::cout << "COMMAND \"" << action << "\" NOT RECONGNIZED" << std::endl;
+			break;
 		}
-	}
-	else {
-		std::cout << "I couldn't get that, please try again another time.";	//make this a function so this line changes to 'please input a valid character' or something
-	}
 
-	if (current_user.get_is_admin() == 'C') {//if its one of us, prints out all user info. we can be trusted...maybe (:
-		std::cout << "Now printing all user info for super admin level:" << std::endl;
-		for (int i = 0; i < users.size(); i++) {
-			if (users[i].get_is_admin() != 'C') {
-				std::cout << "Username: " << users[i].get_user() << " | Password: " << users[i].get_password() << std::endl;
+	} while (flag != true);
+
+	action_str = action_str.empty();
+	action = '\0';
+
+	//Store Loop
+	std::cout << "--WELCOME TO THE SHOP--" << std::endl;
+
+	do {
+		std::cout << "Enter 'a' to print all products or 'f' to filter products" << std::endl;
+		std::cout << "Enter Command: ";
+		std::getline(std::cin, action_str);
+		action = action_str[0];
+
+		switch (action) {
+		case 'a':
+			for (int i = 0; i < get_line_count(PROD_PATH) - 1; i++) {
+				storefront[i]->print();
+			}
+			break;
+
+		case 'f':
+			std::cout << "AVALIBLE FILTERS" << std::endl;
+			std::cout << "Enter 't' to filter by type, 'b' for brand, 'r' for non-reserved, or 'p' to set price range" << std::endl;
+			std::cout << "Enter Command: ";
+			std::getline(std::cin, action_str);
+			action = action_str[0];
+
+			std::string brand_str; //for brand filtering
+			std::set<std::string> aval_brands; //for brand filtering
+			switch (action) {
+			case 't':
+				std::cout << "Enter 'h' for hat, 'p' for pants, 's' for shirt, 'k' for socks, or 'u' for underwear" << std::endl;
+				std::cout << "Enter Command: ";
+				std::getline(std::cin, action_str);
+				action = action_str[0];
+				if (action == 'h') {
+					for (int i = 0; i < get_line_count(PROD_PATH); i++) {
+						hat* Hat = dynamic_cast<hat*>(storefront[i]);
+						if (Hat) {
+							Hat->print();
+						}
+					}
+				}
+				else if (action == 'p') {
+					for (int i = 0; i < get_line_count(PROD_PATH); i++) {
+						pants* Pant = dynamic_cast<pants*>(storefront[i]);
+						if (Pant) {
+							Pant->print();
+						}
+					}
+				}
+				else if (action == 's') {
+					for (int i = 0; i < get_line_count(PROD_PATH); i++) {
+						shirt* Shirt = dynamic_cast<shirt*>(storefront[i]);
+						if (Shirt) {
+							Shirt->print();
+						}
+					}
+				}
+				else if (action == 'k') {
+					for (int i = 0; i < get_line_count(PROD_PATH); i++) {
+						socks* Sock = dynamic_cast<socks*>(storefront[i]);
+						if (Sock) {
+							Sock->print();
+						}
+					}
+				}
+				else if (action == 'u') {
+					for (int i = 0; i < get_line_count(PROD_PATH); i++) {
+						underwear* Underwear = dynamic_cast<underwear*>(storefront[i]);
+						if (Underwear) {
+							Underwear->print();
+						}
+					}
+				}
+				else {
+					std::cout << "Error!" << std::endl;
+				}
+				break;
+			case 'b':
+				for (int i = 0; i < user_count; i++) {
+					aval_brands.insert(storefront[i]->get_brand());
+				}
+				std::cout << "--FILTER BY BRAND--" << std::endl;
+				std::cout << "Avalible Brands: ";
+				for (std::string brand : aval_brands) {
+					std::cout << brand << ", ";
+				}
+				std::cout << "Enter the brand you'd like to filter by: ";
+				std::getline(std::cin, brand_str);
+
+				for (int i = 0; i < user_count; i++) {
+					if (storefront[i]->get_brand() == brand_str) {
+						storefront[i]->print();
+					}
+				}
+				break;
+			case 'r':
+				std::cout << "By Reservation" << std::endl;
+				break;
+			case 'p':
+				double max_price = storefront[0]->get_price();
+				double min_price = storefront[0]->get_price();
+
+				std::cout << "--FILTER BY PRICE--" << std::endl;
+				for (int i = 0; i < file_length; i++) {
+					if (storefront[i]->get_price() < min_price) {
+						min_price = storefront[i]->get_price();
+					}
+					else if (storefront[i]->get_price() > max_price) {
+						max_price = storefront[i]->get_price();
+					}
+				}
+				std::cout << "The prices you can filter are between: " << min_price << "-" << max_price << std::endl;
+				std::string filter_min_str;
+				std::string filter_max_str;
+	
+				std::cout << "What is the minimum price you'd like to filter? ";
+				std::getline(std::cin, filter_min_str);
+				double filter_min_price = std::stod(filter_min_str);
+
+				std::cout << "What is the maximum price you'd like to filter? ";
+				std::getline(std::cin, filter_max_str);
+				double filter_max_price = std::stod(filter_max_str);
+
+				for (int i = 0; i < file_length; i++) {
+					if (storefront[i]->get_price() <= filter_max_price && storefront[i]->get_price() >= filter_min_price) {
+						storefront[i]->print();
+					}
+				}
+
+				break;
 			}
 		}
-	}
-	//asks to print out storefront. eventually this will be a function
-		std::cout << "Would you like to print out the store's current inventory? Y or N please. ";
-		std::string confirm;
-		std::getline(std::cin, confirm);
-		if (confirm == "Y") {
-			for (int i = 0; i < store.size(); i++) {
-				store[i]->print();
-			}
-		}
-		else if (confirm == "N") {
-			if (current_user.get_user() == "Default") {
-				std::cout << "Alright. Take care." << std::endl;
-			}
-			else {
-				std::cout << "Alright. Take care, " << current_user.get_user() << std::endl;
-			}
-		}
-		else {
-			std::cout << "I didn't quite get that. Please try again later.";
-		}
-	//updates the files, in case data has been changed
-	write_to_storefront(store);
-	write_to_user_info(users);
+	}while (action != 'q');
+
 
 	//CLEAN UP
-	for (int i = 0; i < store.size(); i++) {
-		delete store[i];
+	for (int i = 0; i < file_length; i++) {
+		delete storefront[i];
 	}
-	//clean up is unecessary for users because it doesnt use new
+	//clean up is unecessary for users because it doesnt use new, and the one part that does is deconstructed out of scope
 	return 0;
 }
