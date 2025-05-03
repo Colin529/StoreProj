@@ -34,20 +34,20 @@ char login::get_is_admin() const
 
 void login::set_user(std::string user)
 {
-	if (user.length() >= 3) {
+	if (user.length() >= 3&& user.length()<=20) {
 		this->user = user;
 	}
 	else {
-		throw std::exception("Username must be three or more characters");
+		throw std::exception("Username must be three to twenty characters");
 	}
 }
 
 void login::set_password(std::string password)
 {
-	if (password.length() >= 6) {
+	if (password.length() >= 6&&password.length()<=20) {
 		this->password = password;
 	}
 	else {
-		throw std::exception("Password must be 6 or more characters");
+		throw std::exception("Password must be six to twenty-five characters");
 	}
 }
