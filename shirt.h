@@ -8,7 +8,7 @@ protected:
 
 
 public:
-	shirt(std::string clothing_type, std::string brand, double price, double rating, int quantity, double collar_size, double sleeve_length);
+	shirt(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double collar_size, double sleeve_length);
 
 	double get_collar_size() const;
 	double get_sleeve_length() const;

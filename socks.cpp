@@ -1,6 +1,6 @@
 #include "socks.h"
 
-socks::socks(std::string clothing_type, std::string brand, double price, double rating, int quantity, double sock_height, double sock_length) : product(clothing_type, brand, price, rating, quantity)
+socks::socks(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double sock_height, double sock_length) : product(clothing_type, brand, price, rating, quantity, reserved)
 {
 	set_sock_height(sock_height);
 	set_sock_length(sock_length);
@@ -38,5 +38,22 @@ void socks::set_sock_length(double sock_length)
 
 void socks::print() const
 {
-	std::cout << "|" << brand << "| Socks with Sock height " << sock_height << "\" and Sock length " << sock_length << "\" for $" << price << " (set of 4) (Rated " << rating << " out of 5 stars) <" << quantity << " left in stock!>" << std::endl;
+	std::cout << "|" << brand << "| Socks with Sock height " << sock_height << "\" and Sock length " << sock_length << "\" for $" << price << " (set of 4) (Rated " << rating << " out of 5 stars) <";
+
+	if (quantity == 0) {
+		std::cout << "Currently out of stock! Please check again another day.>" << std::endl;
+	}
+
+	else {
+		std::cout << quantity << " left in stock";
+		if (reserved == 0) {
+			std::cout << ".>" << std::endl;
+		}
+		else if (reserved == 1) {
+			std::cout << ", " << reserved << " of which is in a user's cart!>" << std::endl;
+		}
+		else {
+			std::cout << ", " << reserved << " of which are in users' carts!>" << std::endl;
+		}
+	}
 }

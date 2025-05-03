@@ -5,12 +5,13 @@ product::product() {
 }
 
 
-product::product(std::string clothing_type, std::string brand, double price, double rating, int quantity) {
+product::product(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved) {
 	set_clothing_type(clothing_type);
 	set_brand(brand);
 	set_price(price);
 	set_rating(rating);
 	set_quantity(quantity);
+	set_reserved(reserved);
 }
 
 std::string product::get_clothing_type() const
@@ -38,6 +39,11 @@ int product::get_quantity() const
 	return quantity;
 }
 
+int product::get_reserved() const
+{
+	return reserved;
+}
+
 void product::set_clothing_type(const std::string& clothing_type)
 {
 	if (clothing_type == "shirt" || clothing_type == "pants" || clothing_type == "socks" || clothing_type == "underwear" || clothing_type == "shoes" || clothing_type == "hat") {
@@ -50,11 +56,11 @@ void product::set_clothing_type(const std::string& clothing_type)
 
 void product::set_brand(const std::string& brand)
 {
-	if (brand.length() > 0) {
+	if (brand.length() > 0 && brand.length()<=20) {
 		this->brand = brand;
 	}
 	else {
-		throw std::exception("Brand must not be empty");
+		throw std::exception("Brand must not be empty and be less than 20 characters");
 	}
 }
 
@@ -85,6 +91,16 @@ void product::set_quantity(int quantity)
 	}
 	else {
 		throw std::exception("Quantity must be between 0 and 100");
+	}
+}
+
+void product::set_reserved(int reserved)
+{
+	if (reserved >=0 && reserved <= quantity) {
+		this->reserved = reserved;
+	}
+	else {
+		throw std::exception("Reserved field must be between 0 and 100");
 	}
 }
 

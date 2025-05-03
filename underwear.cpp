@@ -1,6 +1,6 @@
 #include "underwear.h"
 
-underwear::underwear(std::string clothing_type, std::string brand, double price, double rating, int quantity, char underwear_size, int trunk_size) : product(clothing_type, brand, price, rating, quantity)
+underwear::underwear(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, char underwear_size, double trunk_size) : product(clothing_type, brand, price, rating, quantity, reserved)
 {
 	set_underwear_size(underwear_size);
 	set_trunk_size(trunk_size);
@@ -11,7 +11,7 @@ char underwear::get_underwear_size() const
 	return underwear_size;
 }
 
-int underwear::get_trunk_size() const
+double underwear::get_trunk_size() const
 {
 	return trunk_size;
 }
@@ -26,7 +26,7 @@ void underwear::set_underwear_size(char underwear_size)
 	}
 }
 
-void underwear::set_trunk_size(int trunk_size)
+void underwear::set_trunk_size(double trunk_size)
 {
 	if (trunk_size >= 24 && trunk_size <= 40) {
 		this->trunk_size = trunk_size;
@@ -38,5 +38,22 @@ void underwear::set_trunk_size(int trunk_size)
 
 void underwear::print() const
 {
-	std::cout << "|" << brand << "| Underwear with Size " << underwear_size << " and Trunk size " << trunk_size << "\" for $" << price << " (set of 3) (Rated " << rating << " out of 5 stars) <" << quantity << " left in stock!>" << std::endl;
+	std::cout << "|" << brand << "| Underwear with Size " << underwear_size << " and Trunk size " << trunk_size << "\" for $" << price << " (set of 3) (Rated " << rating << " out of 5 stars) <";
+
+	if (quantity == 0) {
+		std::cout << "Currently out of stock! Please check again another day.>" << std::endl;
+	}
+
+	else {
+		std::cout << quantity << " left in stock";
+		if (reserved == 0) {
+			std::cout << ".>" << std::endl;
+		}
+		else if (reserved == 1) {
+			std::cout << ", " << reserved << " of which is in a user's cart!>" << std::endl;
+		}
+		else {
+			std::cout << ", " << reserved << " of which are in users' carts!>" << std::endl;
+		}
+	}
 }

@@ -7,7 +7,7 @@ protected:
 	double brim_width = 0;
 
 public:
-	hat(std::string clothing_type, std::string brand, double price, double rating, int quantity, double hat_height, double brim_width);
+	hat(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double hat_height, double brim_width);
 
 	double get_hat_height() const;
 	double get_brim_width() const;

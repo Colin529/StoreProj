@@ -1,6 +1,6 @@
 #include "pants.h"
 
-pants::pants(std::string clothing_type, std::string brand, double price, double rating, int quantity, double waist_size, double hip_length) : product(clothing_type, brand, price, rating, quantity)
+pants::pants(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double waist_size, double hip_length) : product(clothing_type, brand, price, rating, quantity, reserved)
 {
 	set_waist_size(waist_size);
 	set_hip_length(hip_length);
@@ -37,5 +37,22 @@ void pants::set_hip_length(double hip_length)
 }
 
 void pants::print() const {
-	std::cout << "|" << brand << "| Pants with Waist size " << waist_size << "\" and Hip length " << hip_length << "\" for $" << price << " (Rated " << rating << " out of 5 stars) <" << quantity << " left in stock!>" << std::endl;
+	std::cout << "|" << brand << "| Pants with Waist size " << waist_size << "\" and Hip length " << hip_length << "\" for $" << price << " (Rated " << rating << " out of 5 stars) <";
+
+	if (quantity == 0) {
+		std::cout << "Currently out of stock! Please check again another day.>" << std::endl;
+	}
+
+	else {
+		std::cout << quantity << " left in stock";
+		if (reserved == 0) {
+			std::cout << ".>" << std::endl;
+		}
+		else if (reserved == 1) {
+			std::cout << ", " << reserved << " of which is in a user's cart!>" << std::endl;
+		}
+		else {
+			std::cout << ", " << reserved << " of which are in users' carts!>" << std::endl;
+		}
+	}
 }

@@ -1,6 +1,6 @@
 #include "shirt.h"
 
-shirt::shirt(std::string clothing_type, std::string brand, double price, double rating, int quantity, double collar_size, double sleeve_length) : product(clothing_type, brand, price, rating, quantity) {
+shirt::shirt(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double collar_size, double sleeve_length) : product(clothing_type, brand, price, rating, quantity, reserved) {
 	set_collar_size(collar_size);
 	set_sleeve_length(sleeve_length);
 }
@@ -36,5 +36,26 @@ void shirt::set_sleeve_length(double sleeve_length)
 }
 
 void shirt::print() const {
-	std::cout << "|" << brand << "| Dress Shirt with Collar size " << collar_size << "\" and Sleeve length " << sleeve_length << "\" for $" << price << " (Rated " << rating << " out of 5 stars) <" << quantity << " left in stock!>" << std::endl;
+	std::cout << "|" << brand << "| "
+		"Dress Shirt with Collar size " << collar_size <<
+		"\" and Sleeve length " << sleeve_length <<
+		"\" for $" << price <<
+		" (Rated " << rating << " out of 5 stars) <";
+
+		if (quantity==0) {
+			std::cout << "Currently out of stock! Please check again another day.>" << std::endl;
+		}
+
+		else {
+			std::cout << quantity << " left in stock";
+			if (reserved == 0) {
+				std::cout << ".>" << std::endl;
+			}
+			else if (reserved == 1) {
+				std::cout << ", " << reserved << " of which is in a user's cart!>" << std::endl;
+			}
+			else {
+				std::cout << ", " << reserved << " of which are in users' carts!>" << std::endl;
+			}
+		}
 }

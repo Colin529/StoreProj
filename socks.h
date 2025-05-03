@@ -7,7 +7,7 @@ protected:
 	double sock_length = 0;
 
 public:
-	socks(std::string clothing_type, std::string brand, double price, double rating, int quantity, double sock_height, double sock_length);
+	socks(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double sock_height, double sock_length);
 
 	double get_sock_height() const;
 	double get_sock_length() const;
