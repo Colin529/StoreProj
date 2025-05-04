@@ -5,13 +5,19 @@ product::product() {
 }
 
 
-product::product(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved) {
+product::product(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, int id) {
 	set_clothing_type(clothing_type);
 	set_brand(brand);
 	set_price(price);
 	set_rating(rating);
 	set_quantity(quantity);
 	set_reserved(reserved);
+	if (id >= 1000 && id <= 9999) {
+		this->id = id;
+	}
+	else {
+		throw std::exception("Product ID must be between 1000 and 9999");
+	}
 }
 
 std::string product::get_clothing_type() const
@@ -42,6 +48,11 @@ int product::get_quantity() const
 int product::get_reserved() const
 {
 	return reserved;
+}
+
+int product::get_id() const
+{
+	return id;
 }
 
 void product::set_clothing_type(const std::string& clothing_type)

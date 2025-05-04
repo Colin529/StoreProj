@@ -1,6 +1,6 @@
 #include "hat.h"
 
-hat::hat(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double hat_height, double brim_width) : product(clothing_type, brand, price, rating, quantity, reserved)
+hat::hat(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, int id, double hat_height, double brim_width) : product(clothing_type, brand, price, rating, quantity, reserved, id)
 {
 	set_hat_height(hat_height);
 	set_brim_width(brim_width);
@@ -41,19 +41,19 @@ void hat::print() const
 	std::cout << "|" << brand << "| Hat with Hat height " << hat_height<< "\" and Brim width " << brim_width << "\" for $" << price << " (Rated " << rating << " out of 5 stars) <";
 
 	if (quantity == 0) {
-		std::cout << "Currently out of stock! Please check again another day.>" << std::endl;
+		std::cout << "Currently out of stock! Please check again another day.> | " << id << std::endl;
 	}
 
 	else {
 		std::cout << quantity << " left in stock";
 		if (reserved == 0) {
-			std::cout << ".>" << std::endl;
+			std::cout << ".> | " << id << std::endl;
 		}
 		else if (reserved == 1) {
-			std::cout << ", " << reserved << " of which is in a user's cart!>" << std::endl;
+			std::cout << ", " << reserved << " of which is in a user's cart!> | " << id << std::endl;
 		}
 		else {
-			std::cout << ", " << reserved << " of which are in users' carts!>" << std::endl;
+			std::cout << ", " << reserved << " of which are in users' carts!> | " << id << std::endl;
 		}
 	}
 }

@@ -10,9 +10,10 @@ protected:
 	double rating = 0;
 	int quantity = 0;
 	int reserved = 0;
+	int id = 0;
 public:
 	product();
-	product(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved);
+	product(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, int id);
 
 	//ATTEMPT TO IMPLEMENT ENUM AS A GET/SET FUNCTION
 	
@@ -22,6 +23,7 @@ public:
 	double get_rating() const;
 	int get_quantity() const;
 	int get_reserved() const;
+	int get_id() const;
 
 	void set_clothing_type(const std::string& clothing_type);
 	void set_brand(const std::string& brand);

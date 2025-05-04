@@ -7,7 +7,7 @@ protected:
 	double shoe_length = 0;
 
 public:
-	shoes(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, double shoe_width, double shoe_length);
+	shoes(std::string clothing_type, std::string brand, double price, double rating, int quantity, int reserved, int id, double shoe_width, double shoe_length);
 
 	double get_shoe_width() const;
 	double get_shoe_length() const;
