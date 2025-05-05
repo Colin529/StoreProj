@@ -10,7 +10,7 @@
 #include <typeinfo>
 #include <sstream>
 #include <random>
-//Colin, DM me if you have questions about any of the code. I've been working on this for like 7 hours today and I'm suffering from brain damage. See you soon <3
+
 #include "product.h"
 #include "shirt.h"
 #include "pants.h"
@@ -21,6 +21,26 @@
 
 #include "login.h"
 
+
+
+int get_line_count(const std::string& path) {
+	std::ifstream stream;
+	stream.open(path);
+
+	int count = 0;
+
+	if (stream.is_open()) {
+		std::string line;
+
+		while (std::getline(stream, line)) {
+			count++;
+		}
+
+		stream.close();
+	}
+
+	return count;
+}
 std::vector<product*> read_store(const std::string& path) {
 	std::vector<product*> storefront;
 	std::ifstream stream;
@@ -49,7 +69,7 @@ std::vector<product*> read_store(const std::string& path) {
 			std::getline(stream, line, ',');
 			double rating = stod(line);
 
-			char char_field_one='a';
+			char char_field_one = 'a';
 			double num_field_one = 0;	//creates distinction between underwear's first field and all other first fields
 
 			std::getline(stream, line, ',');
@@ -79,35 +99,35 @@ std::vector<product*> read_store(const std::string& path) {
 			int id = std::stoi(line);
 
 			//i used to think this was 'big' if else, HAHAHAHAHAHA.
-				if (clothing_type == "shirt") {
-					storefront.push_back(new shirt(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
-				}
-				if (clothing_type == "pants") {
-					storefront.push_back(new pants(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
-				}
-				if (clothing_type == "socks") {
-					storefront.push_back(new socks(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
-				}
-				if (clothing_type == "underwear") {
-					storefront.push_back(new underwear(clothing_type, brand, price, rating, quantity, reserved, id, char_field_one, num_field_two));
-				}
-				if (clothing_type == "shoes") {
-					storefront.push_back(new shoes(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
-				}
-				if (clothing_type == "hat") {
-					storefront.push_back(new hat(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
-				}
+			if (clothing_type == "shirt") {
+				storefront.push_back(new shirt(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
+			}
+			if (clothing_type == "pants") {
+				storefront.push_back(new pants(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
+			}
+			if (clothing_type == "socks") {
+				storefront.push_back(new socks(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
+			}
+			if (clothing_type == "underwear") {
+				storefront.push_back(new underwear(clothing_type, brand, price, rating, quantity, reserved, id, char_field_one, num_field_two));
+			}
+			if (clothing_type == "shoes") {
+				storefront.push_back(new shoes(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
+			}
+			if (clothing_type == "hat") {
+				storefront.push_back(new hat(clothing_type, brand, price, rating, quantity, reserved, id, num_field_one, num_field_two));
+			}
 
-				//below lines are for printing for verification
-				/*std::cout << clothing_type << ", " <<
-					brand << ", " <<
-					price << ", " <<
-					rating << ", ";
-					if (clothing_type == "underwear") { char_field_one; } else {num_field_one;}
-					std::cout << ", " <<
-					num_field_two << ", " <<
-					quantity << "|" << 
-					id << std::endl;*/
+			//below lines are for printing for verification
+			/*std::cout << clothing_type << ", " <<
+				brand << ", " <<
+				price << ", " <<
+				rating << ", ";
+				if (clothing_type == "underwear") { char_field_one; } else {num_field_one;}
+				std::cout << ", " <<
+				num_field_two << ", " <<
+				quantity << "|" <<
+				id << std::endl;*/
 
 		}
 	}
@@ -139,12 +159,12 @@ std::vector<login> read_userinfo(const std::string& path) {
 
 		std::getline(stream, line); //skips header row
 
-		for (;;) {
-			if (stream.eof()) {
+		for (int i = 0; i < get_line_count(path) - 1; i++) {
+			/*(stream.eof()) {
 				std::cout << "Successfully read user information." << std::endl;
 				stream.close();
 				return users;
-			}
+			}*/
 			std::getline(stream, line, ',');
 			std::string user = line;
 
@@ -162,6 +182,7 @@ std::vector<login> read_userinfo(const std::string& path) {
 		std::cout << "Failed to read from file--aborting proccess!";
 		throw std::exception("Failed to read from designated file");
 	}
+	return users;
 }
 
 login enter_password(std::vector<login> users, login user) {
@@ -213,7 +234,7 @@ login enter_username(std::vector<login> users) {
 		std::cout << "User not found. Please try again." << std::endl;
 		return enter_username(users);
 	}
-	
+
 }
 
 login create_account(std::vector<login>& users) {
@@ -221,7 +242,7 @@ login create_account(std::vector<login>& users) {
 	bool valid_username = false;
 	bool unique_username = false;
 	std::string new_username;
-	while (valid_username == false && unique_username==false) {	//continueously checks if the username is valid and unique
+	while (valid_username == false && unique_username == false) {	//continueously checks if the username is valid and unique
 		std::getline(std::cin, new_username);
 		if (new_username == "menu") {
 			login current_user("None", "aaaaaa", 'N');
@@ -260,14 +281,14 @@ login create_account(std::vector<login>& users) {
 		}
 		else {
 			users.push_back(login(new_username, new_password, 'N'));
-			std::cout << std::endl << "Awesome! Welcome, " << users[users.size()-1].get_user() << "." << std::endl;
+			std::cout << std::endl << "Awesome! Welcome, " << users[users.size() - 1].get_user() << "." << std::endl;
 			valid_password = true;
-			return users[users.size()-1];
+			return users[users.size() - 1];
 		}
 	}
 }
 
-void add_product(std::vector<product*> &store, int max_ids[]) {
+void add_product(std::vector<product*>& store, int max_ids[]) {
 	std::string clothing_type;
 	std::string brand;
 	std::string get_price;
@@ -620,26 +641,26 @@ void add_product(std::vector<product*> &store, int max_ids[]) {
 		}
 
 		if (clothing_type == "shirt") {
-			store.push_back(new shirt(clothing_type, brand, price, rating, quantity, 0, max_ids[0]+1, field_one, field_two));
+			store.push_back(new shirt(clothing_type, brand, price, rating, quantity, 0, max_ids[0] + 1, field_one, field_two));
 		}
 		if (clothing_type == "pants") {
-			store.push_back(new pants(clothing_type, brand, price, rating, quantity, 0, max_ids[1]+1, field_one, field_two));
+			store.push_back(new pants(clothing_type, brand, price, rating, quantity, 0, max_ids[1] + 1, field_one, field_two));
 		}
 		if (clothing_type == "socks") {
-			store.push_back(new socks(clothing_type, brand, price, rating, quantity, 0, max_ids[2]+1, field_one, field_two));
+			store.push_back(new socks(clothing_type, brand, price, rating, quantity, 0, max_ids[2] + 1, field_one, field_two));
 		}
 		if (clothing_type == "underwear") {
-			store.push_back(new underwear(clothing_type, brand, price, rating, quantity, 0, max_ids[3]+1, underwear_size, field_two));
+			store.push_back(new underwear(clothing_type, brand, price, rating, quantity, 0, max_ids[3] + 1, underwear_size, field_two));
 		}
 		if (clothing_type == "shoes") {
-			store.push_back(new shoes(clothing_type, brand, price, rating, quantity, 0, max_ids[4]+1, field_one, field_two));
+			store.push_back(new shoes(clothing_type, brand, price, rating, quantity, 0, max_ids[4] + 1, field_one, field_two));
 		}
 		if (clothing_type == "hat") {
-			store.push_back(new hat(clothing_type, brand, price, rating, quantity, 0, max_ids[5]+1, field_one, field_two));
+			store.push_back(new hat(clothing_type, brand, price, rating, quantity, 0, max_ids[5] + 1, field_one, field_two));
 		}
 		std::cout << std::endl << std::endl;
 		store.at(store.size() - 1)->print();
-		std::cout << std::endl <<"Okay! Does this product look correct? Y/y or N/n only, please: ";
+		std::cout << std::endl << "Okay! Does this product look correct? Y/y or N/n only, please: ";
 		bool valid_yn = false;
 		std::string confirm = "a";
 		while (valid_yn == false) {
@@ -869,7 +890,7 @@ void write_to_storefront(std::vector<product*> store) {
 			output << store[i]->get_reserved() << '|';
 			output << store[i]->get_id();
 			if (i != store.size() - 1) {//prevents issue with extra line breaking program
-				output << std::endl;	
+				output << std::endl;
 			}
 		}
 		std::cout << "Storefront information saved." << std::endl;
@@ -894,8 +915,8 @@ void write_to_user_info(std::vector<login> users) {
 			/*std::cout << users[i].get_password() << " ";*/
 			output << users[i].get_is_admin();
 			/*std::cout << users[i].get_is_admin() << std::endl;*/
-			if (i!=users.size()-1) {//prevents issue with extra line breaking program
-				output << std::endl;	
+			if (i != users.size() - 1) {//prevents issue with extra line breaking program
+				output << std::endl;
 			}
 		}
 		std::cout << "Users information saved." << std::endl;
@@ -905,12 +926,21 @@ void write_to_user_info(std::vector<login> users) {
 	}
 }
 
+void print_entire_store(std::vector <product*> store) {
+	for (int i = 0; i < store.size(); i++) {
+		std::cout << "[" << i + 1 << "]";
+		store.at(i)->print();
+	}
+}
+
+
 int main() {
 	const std::string path = "Data/products.csv";
 
 	const std::string userinfo = "Data/userinfo.csv";
 
 	std::vector<login> users = read_userinfo(userinfo);
+	std::vector<product*> shopping_cart;
 
 	std::vector<product*> store = read_store(path);
 
@@ -952,12 +982,12 @@ int main() {
 			}
 		}
 		});
-	int max_ids[6]{max_shirt_id,max_pants_id,max_socks_id,max_underwear_id,max_shoes_id,max_hat_id};
+	int max_ids[6]{ max_shirt_id,max_pants_id,max_socks_id,max_underwear_id,max_shoes_id,max_hat_id };
 
 	//WHEN SUBMITTING CHANGE TO "None" FOR USER!!!
 	login current_user("AAA", "aaaaaa", 'N');
 
-	char command='0';
+	char command = '0';
 
 	std::cout << std::endl << "--Welcome to Crow's Nest Clothing!--" << std::endl << std::endl;
 
@@ -975,7 +1005,7 @@ int main() {
 			std::cout << "[R/r]: Reserve a product in your shopping cart" << std::endl;
 			std::cout << "[V/v]: View products in your shopping cart" << std::endl;
 		}
-		if (current_user.get_is_admin() != 'N' ) {
+		if (current_user.get_is_admin() != 'N') {
 			std::cout << "---Admin functions---" << std::endl;
 			std::cout << "[A/a]: Add a new product to the storefront" << std::endl;
 			std::cout << "[E/e]: Edit fields for current products" << std::endl;
@@ -1050,14 +1080,11 @@ Goodbye! ^-^
 		}
 		std::transform(get_command.begin(), get_command.end(), get_command.begin(), ::toupper);	//this turns all lowercase to uppercase
 		command = get_command[0];
-		std::cout << std::endl;
+		
 
 		switch (command) {
 		case 'P': {
-			for (int i = 0; i < store.size(); i++) {
-				store[i]->print();
-			}
-			std::cout << std::endl;
+			print_entire_store(store);
 			break;
 		}
 		case 'F': {
@@ -1240,13 +1267,80 @@ Goodbye! ^-^
 					std::cout << std::endl << "Please enter a valid character!" << std::endl << std::endl;
 				}
 			}
-				break;
-		}
-		case 'S'://sort data
 			break;
+		}
+		case 'S':
+		{
+			std::string sort_str;
+			char sort;
+
+			std::cout << "How would you like to sort the data?" << std::endl;
+			std::cout << "[A] Alphabetical (Brand)" << std::endl;
+			std::cout << "[P] By Price" << std::endl;
+			std::cout << "[Z] By Quantity" << std::endl;
+			std::cout << "Enter Command: ";
+			std::getline(std::cin, sort_str);
+			sort = sort_str[0];
+
+			if (sort == 'A') {
+				std::cout << "Alphabetical! [A] Ascending or [D] Desending:";
+				std::getline(std::cin, sort_str);
+				sort = sort_str[0];
+				if (sort == 'A') {//ascending alphabetical order
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_brand() < b->get_brand();
+						});
+				}
+				else if (sort == 'D') {//descending alphabetical order
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_brand() > b->get_brand();
+						});
+				}
+			}
+			else if (sort == 'P') {
+				std::cout << "By Price! [A] Ascending or [D] Desending:";
+				std::getline(std::cin, sort_str);
+				sort = sort_str[0];
+				if (sort == 'A') {//ascending order by price
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_price() < b->get_price();
+						});
+				}
+				else if (sort == 'D') {//descending order by price
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_price() > b->get_price();
+						});
+				}
+			}
+			else if (sort == 'Z') {
+				std::cout << "By Quantity! [A] Ascending or [D] Desending:";
+				std::getline(std::cin, sort_str);
+				sort = sort_str[0];
+				if (sort == 'A') {//ascending order by quantity
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_quantity() < b->get_quantity();
+						});
+				}
+				else if (sort == 'D') {//descending order by quantity
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_quantity() > b->get_quantity();
+						});
+				}
+			}
+
+			// Print sorted list
+			std::cout << "\nSorted Product List:\n";
+			for (int i = 0; i < store.size(); i++) {
+				store[i]->print();
+			}
+
+
+			break;
+		}
 		case 'L'://login (not logged in)
 			if (current_user.get_user() == "None") {
 				current_user = enter_username(users);
+				shopping_cart.clear();
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
@@ -1256,6 +1350,7 @@ Goodbye! ^-^
 		{
 			if (current_user.get_user() == "None") {
 				current_user = create_account(users);
+				shopping_cart.clear();
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
@@ -1287,7 +1382,7 @@ Goodbye! ^-^
 					std::cout << std::endl;
 					int size = store.size();
 					while (i < size) {
-						if (store[i]->get_brand() == brand_search){
+						if (store[i]->get_brand() == brand_search) {
 							//okay im really mad, i tried just doing the pushback with store[i] but it would throw an error
 							//so i fanangled my way to making a two step process and it worked...idk why
 							product* triggered_product = store[i];
@@ -1298,7 +1393,7 @@ Goodbye! ^-^
 					}
 
 					if (buy_from_store.empty()) {
-						std::cout << std::endl << "We currently don't have any clothes from " << brand_search << "." <<std::endl << std::endl;
+						std::cout << std::endl << "We currently don't have any clothes from " << brand_search << "." << std::endl << std::endl;
 					}
 					else {
 						std::cout << std::endl << "We found " << buy_from_store.size() << " item";
@@ -1371,7 +1466,7 @@ Goodbye! ^-^
 								}
 							}
 
-						
+
 						}
 						else {
 							std::cout << " from " << brand_search << "!" << std::endl << std::endl;
@@ -1385,17 +1480,92 @@ Goodbye! ^-^
 				break;
 			}
 		}
-		case 'R'://reserve product (logged in)
-			if (current_user.get_user() != "None") {
-				//reserve product code goes here
+		case 'R': // reserve product (logged in)
+		{
+			if (current_user.get_user() == "None") {
+				std::cout << "You must be logged in to add products to the cart." << std::endl;
+				break;
 			}
-			else {
-				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
+
+			print_entire_store(store);
+
+			while (true) {
+				std::string product_id_str;
+				std::cout << "\nWhich product would you like to add to your cart?" << std::endl;
+				std::cout << "Enter product ID Number or [Q] to quit: ";
+				std::getline(std::cin, product_id_str);
+
+				if (product_id_str == "q" || product_id_str == "Q") {
+					break;
+				}
+
+				
+				int prod_id;
+				try {
+					prod_id = std::stoi(product_id_str);
+				}
+				catch (...) {
+					std::cout << "Invalid input. Please enter a numeric ID or 'Q' to quit." << std::endl;
+					continue;
+				}
+
+				
+				product* selected_product = nullptr;
+				for (int i = 0; i < store.size(); i++) {
+					if (store.at(i)->get_id() == prod_id) {
+						selected_product = store.at(i);
+						break;
+					}
+				}
+
+				if (selected_product == nullptr) {
+					std::cout << "No product found with ID: " << prod_id << std::endl;
+					continue; // ask again
+				}
+
+				// Ask for confirmation
+				std::cout << "\nAdd to cart? Brand: " << selected_product->get_brand()
+					<< " | ID: " << selected_product->get_id()
+					<< "\nConfirm [Y]es / [N]o: ";
+				std::string confirmation_str;
+				std::getline(std::cin, confirmation_str);
+
+				if (confirmation_str.empty()) {
+					std::cout << "INVALD INPUT.\n";
+					continue;
+				}
+
+				char confirmation = std::toupper(confirmation_str[0]);
+
+				if (confirmation == 'Y') {
+					shopping_cart.push_back(selected_product);
+					std::cout << "Product added to your cart.\n";
+					break;
+				}
+				else if (confirmation == 'N') {
+					std::cout << "PRODUCT NOT ADDED TO YOUR CART \n";
+					continue;
+				}
+				else {
+					std::cout << "COMMAND NOT RECOGNIZED\n";
+					continue;
+				}
 			}
+
 			break;
+		}
 		case 'V'://view reserved products (logged in)
 			if (current_user.get_user() != "None") {
-				//view reserved products code goes here
+				if (shopping_cart.empty()) {
+					std::cout << "YPUR SHOPPING CART IS EMPTY" << std::endl;
+				}
+				else {
+					std::cout << "--CURRENT USERS SHOPPING CART--" << std::endl;
+					for (int i = 0; i < shopping_cart.size(); i++) {
+						shopping_cart.at(i)->print();
+					}
+					std::cout << "" << std::endl;
+				}
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
@@ -1419,7 +1589,7 @@ Goodbye! ^-^
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
 			}
-			break;		
+			break;
 		case 'U'://print all users (creator)
 			if (current_user.get_is_admin() == 'C') {
 				{
@@ -1438,84 +1608,84 @@ Goodbye! ^-^
 			break;
 		case 'D'://delete an account (creator)
 			if (current_user.get_is_admin() == 'C') {
-			{
-			for (int i = 0; i < users.size(); i++) {
-				if (users[i].get_is_admin() != 'C') {
-					std::cout << "Username: " << users[i].get_user() << " | Password: " << users[i].get_password() << std::endl;
-				}
-			}
-			std::cout << std::endl << "Which account would you like to delete?" << std::endl;
-			std::string dlt_account;
-			std::getline(std::cin, dlt_account);
-			if (dlt_account == "menu") {
-				std::cout << std::endl;
-				break;
-			}
-			else if (dlt_account.length() >= 3 && dlt_account.length() <= 20) {
-				/*std::for_each(users.begin(), users.end(), [&dlt_account, &users](const login& l) {
-					int position = std::distance(users.begin(),)
-					if (l.get_user() == dlt_account) {
-						users.erase();
+				{
+					for (int i = 0; i < users.size(); i++) {
+						if (users[i].get_is_admin() != 'C') {
+							std::cout << "Username: " << users[i].get_user() << " | Password: " << users[i].get_password() << std::endl;
+						}
 					}
-					});*/			//I tried using this but realized it was really hard to get the iterator's position, so I just went with a index for loop
-					/*for (int i = 0; i < users.size(); i++) {
-
-						if (users[i].get_user() == dlt_account) {
-							account_found == true;
-						}
-						if (users[i].get_user() != dlt_account && account_found==false) {
-							it++;
-						}
-
-						}*/
-				std::vector<login>::iterator it = users.begin();
-				int i = 0;
-				while (i < users.size()) {
-					if (users[i].get_user() == dlt_account) {
+					std::cout << std::endl << "Which account would you like to delete?" << std::endl;
+					std::string dlt_account;
+					std::getline(std::cin, dlt_account);
+					if (dlt_account == "menu") {
+						std::cout << std::endl;
 						break;
 					}
-					if (users[i].get_user() != dlt_account) {
-						it++;
-					}
-					i++;
-				}
-				if (i == users.size()) {
-					std::cout << std::endl << "No user named " << dlt_account << " exists! Unable to delete.";
-				}
-				else {
-					login test_user = *it;
-					if (test_user.get_is_admin() == 'C') {
-						std::cout << std::endl << "Hey wait a moment! You're trying to remove a hidden creator account. Are you /sure/ you want to do this? If so, type YES in all caps: ";
-						std::string accept_deletion;
-						std::getline(std::cin, accept_deletion);
-						if (accept_deletion == "menu") {
-							std::cout << std::endl;
-							break;
+					else if (dlt_account.length() >= 3 && dlt_account.length() <= 20) {
+						/*std::for_each(users.begin(), users.end(), [&dlt_account, &users](const login& l) {
+							int position = std::distance(users.begin(),)
+							if (l.get_user() == dlt_account) {
+								users.erase();
+							}
+							});*/			//I tried using this but realized it was really hard to get the iterator's position, so I just went with a index for loop
+							/*for (int i = 0; i < users.size(); i++) {
+
+								if (users[i].get_user() == dlt_account) {
+									account_found == true;
+								}
+								if (users[i].get_user() != dlt_account && account_found==false) {
+									it++;
+								}
+
+								}*/
+						std::vector<login>::iterator it = users.begin();
+						int i = 0;
+						while (i < users.size()) {
+							if (users[i].get_user() == dlt_account) {
+								break;
+							}
+							if (users[i].get_user() != dlt_account) {
+								it++;
+							}
+							i++;
 						}
-						else if (accept_deletion == "YES") {
-							users.erase(it);
-							std::cout << std::endl << "Successfully deleted user " << test_user.get_user() << ".";
+						if (i == users.size()) {
+							std::cout << std::endl << "No user named " << dlt_account << " exists! Unable to delete.";
 						}
 						else {
-							std::cout << std::endl << "Alright, thanks for keeping the account safe.";
+							login test_user = *it;
+							if (test_user.get_is_admin() == 'C') {
+								std::cout << std::endl << "Hey wait a moment! You're trying to remove a hidden creator account. Are you /sure/ you want to do this? If so, type YES in all caps: ";
+								std::string accept_deletion;
+								std::getline(std::cin, accept_deletion);
+								if (accept_deletion == "menu") {
+									std::cout << std::endl;
+									break;
+								}
+								else if (accept_deletion == "YES") {
+									users.erase(it);
+									std::cout << std::endl << "Successfully deleted user " << test_user.get_user() << ".";
+								}
+								else {
+									std::cout << std::endl << "Alright, thanks for keeping the account safe.";
+								}
+							}
+							else {
+								users.erase(it);
+								std::cout << std::endl << "Successfully deleted user " << test_user.get_user() << ".";
+							}
 						}
 					}
 					else {
-						users.erase(it);
-						std::cout << std::endl << "Successfully deleted user " << test_user.get_user() << ".";
+						std::cout << "Unable to search given name--Username must be between 3-20 characters.";
 					}
+					//THAT WAS THE WORST TWO HOURS IVE CODED IN A WHILE WTH
+					//In the end, I settled on an incrementing while loop, breaking when the value of users[i] was the same as the user specified string
+					//I was getting crazy errors when trying to get user at position [it] which makes sense, since its an iterator and not a specified position
+					//I was also getting errors due to me forgetting to increment 'i' at first
+					//Finally, I erase at position 'it', which is the iterated location.
+					std::cout << std::endl << std::endl;
 				}
-			}
-			else {
-				std::cout << "Unable to search given name--Username must be between 3-20 characters.";
-			}
-			//THAT WAS THE WORST TWO HOURS IVE CODED IN A WHILE WTH
-			//In the end, I settled on an incrementing while loop, breaking when the value of users[i] was the same as the user specified string
-			//I was getting crazy errors when trying to get user at position [it] which makes sense, since its an iterator and not a specified position
-			//I was also getting errors due to me forgetting to increment 'i' at first
-			//Finally, I erase at position 'it', which is the iterated location.
-			std::cout << std::endl << std::endl;
-			}
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
@@ -1524,6 +1694,7 @@ Goodbye! ^-^
 		case 'O'://log out
 			if (current_user.get_user() != "None") {
 				current_user = login("None", "aaaaaa", 'N');
+				shopping_cart.clear();
 				std::cout << std::endl << "Logged out successfully." << std::endl << std::endl;
 			}
 			else {
@@ -1567,7 +1738,7 @@ Goodbye! ^-^
 			return 0;
 		}
 		default:
-			std::cout<< "Command not recognized. Please try again." << std::endl << std::endl;
+			std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
 		}
 	}
 
