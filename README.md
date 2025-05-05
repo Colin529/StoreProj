@@ -5,7 +5,7 @@ Welcome to the Crow's Nest Clothing store! We sell a variety of clothes, and thi
 
 If you're just browsing, you can look at the whole storefront, filter products, and even sort them by various criteria.
 
-If you log in or create an account, you can buy products, reserve products, and even create a shopping cart that will be retained throughout program resets!
+If you log in or create an account, you can buy products, reserve products, and even create a shopping cart ~~that will be retained throughout program resets~~! (Note: we ran out of time for this, but the shopping cart still works!)
 
 If you have admin privileges, you can even add new products or edit product fields. ~~There's rumors of a secret *super-admin* clearance, but...perhaps it's just a rumor...~~
 
