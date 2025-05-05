@@ -1770,11 +1770,12 @@ Goodbye! ^-^
 			char sort;
 
 			std::cout << "How would you like to sort the data?" << std::endl;
-			std::cout << "[A] Alphabetical (Brand)" << std::endl;
-			std::cout << "[P] By Price" << std::endl;
-			std::cout << "[Z] By Quantity" << std::endl;
+			std::cout << "[A/a] Alphabetical (Brand)" << std::endl;
+			std::cout << "[P/p] By Price" << std::endl;
+			std::cout << "[Z/z] By Quantity" << std::endl;
 			std::cout << "Enter Command: ";
 			std::getline(std::cin, sort_str);
+			std::transform(sort_str.begin(), sort_str.end(), sort_str.begin(), ::toupper);
 			sort = sort_str[0];
 
 			if (sort == 'A') {
