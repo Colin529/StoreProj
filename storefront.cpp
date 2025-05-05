@@ -10,7 +10,7 @@
 #include <typeinfo>
 #include <sstream>
 #include <random>
-//Colin, DM me if you have questions about any of the code. I've been working on this for like 7 hours today and I'm suffering from brain damage. See you soon <3
+
 #include "product.h"
 #include "shirt.h"
 #include "pants.h"
@@ -704,10 +704,8 @@ void buy_product(std::vector<product*>& store, std::vector<product*>& buy_from, 
 		for (int i = 0; i < store.size(); i++) {
 			if (store[i]->get_id() == buy_from[buy_from_position]->get_id()) {
 				int new_quantity = store[i]->get_quantity() - 1;
-				std::cout << store[i]->get_quantity() << " ";
 				store[i]->set_quantity(new_quantity);
-				std::cout << store[i]->get_quantity();
-				std::cout << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
+				std::cout << std::endl << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
 				return;
 			}
 		}
@@ -724,10 +722,8 @@ void buy_product(std::vector<product*>& store, std::vector<product*>& buy_from, 
 			for (int i = 0; i < store.size(); i++) {
 				if (store[i]->get_id() == buy_from[buy_from_position]->get_id()) {
 					int new_quantity = store[i]->get_quantity() - 1;
-					std::cout << store[i]->get_quantity() << " ";
 					store[i]->set_quantity(new_quantity);
-					std::cout << store[i]->get_quantity();
-					std::cout << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
+					std::cout << std::endl << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
 					return;
 				}
 			}
@@ -761,10 +757,8 @@ void buy_product(std::vector<product*>& store, std::vector<product*>& buy_from, 
 			for (int i = 0; i < store.size(); i++) {
 				if (store[i]->get_id() == buy_from[buy_from_position]->get_id()) {
 					int new_quantity = store[i]->get_quantity() - 1;
-					std::cout << store[i]->get_quantity() << " ";
 					store[i]->set_quantity(new_quantity);
-					std::cout << store[i]->get_quantity();
-					std::cout << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
+					std::cout << std::endl << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
 					return;
 				}
 			}
@@ -781,10 +775,8 @@ void buy_product(std::vector<product*>& store, std::vector<product*>& buy_from, 
 				for (int i = 0; i < main_store_size; i++) {
 					if (store[i]->get_id() == buy_from[buy_from_position]->get_id()) {
 						int new_quantity = store[i]->get_quantity() - 1;
-						std::cout << store[i]->get_quantity() << " ";
 						store[i]->set_quantity(new_quantity);
-						std::cout << store[i]->get_quantity();
-						std::cout << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
+						std::cout << std::endl << std::endl << "Awesome! Your purchase was successful. Congratulations on your new " << store[i]->get_clothing_type() << "!" << std::endl << std::endl;
 						return;
 					}
 				}
@@ -812,6 +804,522 @@ void buy_product(std::vector<product*>& store, std::vector<product*>& buy_from, 
 			return;
 		}
 	}
+}
+
+void edit_product(std::vector<product*>& store) {
+	std::string get_value;
+	double value = 0;
+	char underwear_size = 'a';
+	char valid_char = 'a';
+
+	std::cout << std::endl;
+	for (int i = 0; i < store.size(); i++) {
+		store[i]->print();
+	}
+	std::cout << std::endl;
+	std::cout << "Which product do you want to alter? Reminder to specify via the four digit ID on the right: ";
+	int id = 0;
+	std::string get_id;
+	std::getline(std::cin, get_id);
+	if (std::all_of(get_id.begin(), get_id.end(), std::isdigit)) {
+		id = stoi(get_id);
+	}
+	else {
+		std::cout << std::endl << "I didn't quite get that. Reminder that the ID will be a four digit code. Please enter the product's ID code: ";
+		std::getline(std::cin, get_id);
+		if (std::all_of(get_id.begin(), get_id.end(), std::isdigit)) {
+			id = stoi(get_id);
+		}
+		else {
+			std::cout << std::endl << "I didn't quite get that. Exiting to main menu." << std::endl << std::endl;
+			return;
+		}
+	}
+	if (id >= 1000 && id < 10000) {
+		int i = 0;
+		while (i < store.size()) {
+			if (store[i]->get_id() == id) {
+				product* triggered_product = store[i];
+				triggered_product->print();
+			}
+			i++;
+		}
+		if (i !=store.size()) {
+			std::cout << std::endl;
+			std::cout << "Alright, let's edit this product! What field do you want to edit?" << std::endl;
+			//Start editing fields
+			char command = 'a';
+			while (command !='M') {
+				std::cout << "B for brand, P for price, S for rating, Q for quantity, R for reserved, 1 for the first size field, 2 for the second size field, m when you're done: ";
+				std::string get_command;
+				std::getline(std::cin, get_command);
+				if (get_command == "menu") {
+					return;
+				}
+				std::transform(get_command.begin(), get_command.end(), get_command.begin(), ::toupper);	//this turns all lowercase to uppercase
+				command = get_command[0];
+				std::cout << std::endl;
+				if (command == 'B'){
+					std::cout << "Okay! Please set the new brand name. Reminder that the brand must be between 3 and 20 characters: ";
+					while (get_value.length()<3||get_value.length()>20) {
+						std::getline(std::cin, get_value);
+						if (get_value == "menu") {
+							std::cout << std::endl;
+							return;
+						}
+						if (get_value.length() < 3 || get_value.length() > 20) {
+							std::cout << "Between 3 and 20 characters, please! " << std::endl << std::endl;
+						}
+					}
+					store[i]->set_brand(get_value);
+					std::cout << "Alright, the new brand of this product has been set to " << get_value << "." << std::endl << std::endl;
+				}
+				else if (command == 'P') {
+					std::cout << "Okay! Please set the new price. Reminder that the price must be between $10 and $10000: ";
+					while (value < 10 || value > 10000) {
+						std::getline(std::cin, get_value);
+						if (get_value == "menu") {
+							std::cout << std::endl;
+							return;
+						}
+						std::istringstream check_string(get_value);
+						double check;
+						check_string >> std::noskipws >> check;
+						if (check_string.eof() && check_string.fail() == false) {
+							value = stod(get_value);
+							if (value < 10 || value > 10000) {
+								std::cout << "10-10000, please! " << std::endl << std::endl;
+							}
+						}
+						else {
+							std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+						}
+					}
+					store[i]->set_price(value);
+					std::cout << "Alright, the new price of this product has been set to " << value << "." << std::endl << std::endl;
+				}
+				else if (command == 'S') {
+					std::cout << "Okay! Please set the new rating. Reminder that the rating must be between 0 and 5: ";
+					while (value < 0 || value > 5) {
+						std::getline(std::cin, get_value);
+						if (get_value == "menu") {
+							std::cout << std::endl;
+							return;
+						}
+						std::istringstream check_string(get_value);
+						double check;
+						check_string >> std::noskipws >> check;
+						if (check_string.eof() && check_string.fail() == false) {
+							value = stod(get_value);
+							if (value < 10 || value > 10000) {
+								std::cout << "0-5, please! " << std::endl << std::endl;
+							}
+						}
+						else {
+							std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+						}
+					}
+					store[i]->set_quantity(value);
+					std::cout << "Alright, the new rating of this product has been set to " << value << "." << std::endl << std::endl;
+
+				}
+				else if (command == 'Q') {
+					std::cout << "Okay! Please set the new quantity. Reminder that the quantity must be between 0 and 100: ";
+					while (value < 0 || value > 100) {
+						std::getline(std::cin, get_value);
+						if (get_value == "menu") {
+							std::cout << std::endl;
+							return;
+						}
+						if (std::all_of(get_value.begin(), get_value.end(), std::isdigit)) {
+							value = stoi(get_value);
+							if (value < 0 || value > 100) {
+								std::cout << "0-100, please! " << std::endl << std::endl;
+							}
+						}
+						else {
+							std::cout << "Please input a valid number! Integers only, please. " << std::endl << std::endl;
+						}
+					}
+					store[i]->set_quantity(value);
+					std::cout << "Alright, the new quantity of this product has been set to " << value << "." << std::endl << std::endl;
+				}
+				else if (command == 'R') {
+					std::cout << "Okay! Please set the new number of reservations. Reminder that the number of reservations must be between 0 and however many clothes already in stock: ";
+					while (value < 0 || value > store[i]->get_quantity()) {
+						std::getline(std::cin, get_value);
+						if (get_value == "menu") {
+							std::cout << std::endl;
+							return;
+						}
+						if (std::all_of(get_value.begin(), get_value.end(), std::isdigit)) {
+							value = stoi(get_value);
+							if (value < 0 || value > store[i]->get_quantity()) {
+								std::cout << "0-" << store[i]->get_quantity() << ", please!" << std::endl << std::endl;
+							}
+						}
+						else {
+							std::cout << "Please input a valid number! Integers only, please. " << std::endl << std::endl;
+						}
+					}
+					store[i]->set_reserved(value);
+					std::cout << "Alright, the new number of reservations for this product has been set to " << value << "." << std::endl << std::endl;
+				}
+				else if (command == '1') {
+					//field one below
+					std::string clothing_type;
+					if (shirt* shirtptr = dynamic_cast<shirt*>(store[i])) {
+						while (value < 14 || value > 20) {
+							std::cout << "What is the collar size? Reminder that it must be between 14-20: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 14 || value > 20) {
+									std::cout << "14-20, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						shirtptr->set_collar_size(value);
+						store[i] = shirtptr;
+						std::cout << "Alright, the new collar size for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (pants* pantsptr = dynamic_cast<pants*>(store[i])) {
+						while (value < 27 || value > 44) {
+							std::cout << "What is the waist size? Reminder that it must be between 27-44: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 27 || value > 44) {
+									std::cout << "27-44, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						pantsptr->set_waist_size(value);
+						store[i] = pantsptr;
+						std::cout << "Alright, the new waist size for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (socks* socksptr = dynamic_cast<socks*>(store[i])) {
+						while (value < 3 || value > 10) {
+							std::cout << "What is the sock height? Reminder that it must be between 3-10: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 3 || value > 10) {
+									std::cout << "3-10, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						socksptr->set_sock_height(value);
+						store[i] = socksptr;
+						std::cout << "Alright, the new sock height for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (underwear* underwearptr = dynamic_cast<underwear*>(store[i])) {
+						while (underwear_size == 'a') {
+							std::cout << "What is the size of the underwear? Reminder to use S/M/L/X only: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							if (get_value.length() == 1) {	//checks to see if the taken string is only one character
+								valid_char = get_value[0];
+								if (valid_char == 'S' || valid_char == 'M' || valid_char == 'L' || valid_char == 'X') {	//verifies that its a valid underwear size/not just a single digit number
+									underwear_size = valid_char;
+								}
+								else {
+									std::cout << "S/M/L/X only, please!" << std::endl << std::endl;
+								}
+							}
+						}
+						underwearptr->set_underwear_size(underwear_size);
+						store[i] = underwearptr;
+						std::cout << "Alright, the new underwear size for this product has been set to " << underwear_size << "." << std::endl << std::endl;
+					}
+					if (shoes* shoesptr = dynamic_cast<shoes*>(store[i])) {
+						while (value < 2.5 || value > 5) {
+							std::cout << "What is the shoe width? Reminder that it must be between 2.5-5: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 2.5 || value > 5) {
+									std::cout << "2.5-5, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						shoesptr->set_shoe_width(value);
+						store[i] = shoesptr;
+						std::cout << "Alright, the new shoe width for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (hat* hatptr = dynamic_cast<hat*>(store[i])) {
+						while (value < 3 || value > 8) {
+							std::cout << "What is the hat height? Reminder that it must be between 3-8: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 3 || value > 8) {
+									std::cout << "3-8, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						hatptr->set_hat_height(value);
+						store[i] = hatptr;
+						std::cout << "Alright, the new hat height for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+				}
+				else if (command == '2') {
+					//field two below
+					if (shirt* shirtptr = dynamic_cast<shirt*>(store[i])) {
+						while (value < 32 || value > 38) {
+							std::cout << "What is the sleeve length? Reminder that it must be between 32-38: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 32 || value > 38) {
+									std::cout << "32-38, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						shirtptr->set_sleeve_length(value);
+						store[i] = shirtptr;
+						std::cout << "Alright, the new sleeve length for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (pants* pantsptr = dynamic_cast<pants*>(store[i])) {
+						while (value < 32 || value > 51) {
+							std::cout << "What is the hip length? Reminder that it must be between 32-51: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 32 || value > 51) {
+									std::cout << "32-51, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						pantsptr->set_hip_length(value);
+						store[i] = pantsptr;
+						std::cout << "Alright, the new hip length for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (socks* socksptr = dynamic_cast<socks*>(store[i])) {
+						while (value < 3 || value > 14) {
+							std::cout << "What is the sock length? Reminder that it must be between 3-14: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 3 || value > 14) {
+									std::cout << "3-14, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							};
+						}
+						socksptr->set_sock_length(value);
+						store[i] = socksptr;
+						std::cout << "Alright, the new sock length for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (underwear* underwearptr = dynamic_cast<underwear*>(store[i])) {
+						while (value < 24 || value > 40) {
+							std::cout << "What is the trunk size? Reminder that it must be between 24-40: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 24 || value > 40) {
+									std::cout << "24-40, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						underwearptr->set_trunk_size(value);
+						store[i] = underwearptr;
+						std::cout << "Alright, the new trunk size for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (shoes* shoesptr = dynamic_cast<shoes*>(store[i])) {
+						while (value < 9 || value > 12.5) {
+							std::cout << "What is the shoe length? Reminder that it must be between 9-12.5: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 9 || value > 12.5) {
+									std::cout << "9-12.5, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						shoesptr->set_shoe_length(value);
+						store[i] = shoesptr;
+						std::cout << "Alright, the new shoe length for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+					if (hat* hatptr = dynamic_cast<hat*>(store[i])) {
+						while (value < 20 || value > 25) {
+							std::cout << "What is the brim width? Reminder that it must be between 20-25: ";
+							std::getline(std::cin, get_value);
+							if (get_value == "menu") {
+								std::cout << std::endl;
+								return;
+							}
+							std::istringstream check_string(get_value);
+							double check;
+							check_string >> std::noskipws >> check;
+							if (check_string.eof() && check_string.fail() == false) {
+								value = stod(get_value);
+								if (value < 20 || value > 25) {
+									std::cout << "20-25, please!" << std::endl << std::endl;
+								}
+							}
+							else {
+								std::cout << "Please input a valid number! Integers and Doubles only, please." << std::endl << std::endl;
+							}
+						}
+						hatptr->set_brim_width(value);
+						store[i] = hatptr;
+						std::cout << "Alright, the new brim width for this product has been set to " << value << "." << std::endl << std::endl;
+					}
+				}
+				else if (command == 'M') {
+					std::cout << std::endl << "Okay! Changes have been saved. Returning to the main menu." << std::endl << std::endl;
+					return;
+				}
+				else {
+					std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
+				}
+
+
+
+
+
+
+
+
+
+
+
+
+			}
+		}
+	}
+	else {
+		std::cout << std::endl << "Product IDs should be four digits long (e.g. '1234'). Please enter the product's ID code: ";
+		std::getline(std::cin, get_id);
+		if (std::all_of(get_id.begin(), get_id.end(), std::isdigit)) {
+			id = stoi(get_id);
+			if (id >= 1000 && id < 10000) {
+				int i = 0;
+				while (i < store.size()) {
+					if (store[i]->get_id() == id) {
+						product* triggered_product = store[i];
+						triggered_product->print();
+					}
+					i++;
+				}
+				if (i != store.size()) {
+					std::cout << std::endl;
+				}
+			}
+			else {
+				std::cout << std::endl << "I didn't quite get that. Exiting to main menu." << std::endl << std::endl;
+				return;
+			}
+		}
+		else {
+			std::cout << std::endl << "I didn't quite get that. Exiting to main menu." << std::endl << std::endl;
+			return;;
+		}
+	}
+
 }
 
 void write_to_storefront(std::vector<product*> store) {
@@ -914,6 +1422,8 @@ int main() {
 
 	std::vector<product*> store = read_store(path);
 
+	std::vector<product*> shopping_cart;
+
 	int max_shirt_id = 1000;
 	int max_pants_id = 2000;
 	int max_socks_id = 3000;
@@ -954,12 +1464,23 @@ int main() {
 		});
 	int max_ids[6]{max_shirt_id,max_pants_id,max_socks_id,max_underwear_id,max_shoes_id,max_hat_id};
 
-	//WHEN SUBMITTING CHANGE TO "None" FOR USER!!!
-	login current_user("AAA", "aaaaaa", 'N');
+	login current_user("None", "aaaaaa", 'N');
 
 	char command='0';
-
-	std::cout << std::endl << "--Welcome to Crow's Nest Clothing!--" << std::endl << std::endl;
+	//formatting is messy but I promise it looks good on console, otherwise its super broken
+	std::cout << std::endl << R"(
+			   			 __
+			    .-.	                /^{>
+			   /'v'\	    ____) (____
+			  (/   \)         //'--;   ;--'\\
+			 ='="="===<	 ///////\_/\\\\\\\
+			    |_|			m m
+		|------------------------------------|
+		|--Welcome to Crow's Nest Clothing!--|
+		|------------------------------------|
+		
+		
+		)" << std::endl << std::endl;
 
 	while (command != 'q') {
 		std::cout << "Avalible commands:" << std::endl;
@@ -973,7 +1494,7 @@ int main() {
 		if (current_user.get_user() != "None") {
 			std::cout << "[B/b]: Buy a product" << std::endl;
 			std::cout << "[R/r]: Reserve a product in your shopping cart" << std::endl;
-			std::cout << "[V/v]: View products in your shopping cart" << std::endl;
+			std::cout << "[V/v]: View products in your shopping cart & buy them" << std::endl;
 		}
 		if (current_user.get_is_admin() != 'N' ) {
 			std::cout << "---Admin functions---" << std::endl;
@@ -1243,6 +1764,71 @@ Goodbye! ^-^
 				break;
 		}
 		case 'S'://sort data
+		{
+			std::string sort_str;
+			char sort;
+
+			std::cout << "How would you like to sort the data?" << std::endl;
+			std::cout << "[A] Alphabetical (Brand)" << std::endl;
+			std::cout << "[P] By Price" << std::endl;
+			std::cout << "[Z] By Quantity" << std::endl;
+			std::cout << "Enter Command: ";
+			std::getline(std::cin, sort_str);
+			sort = sort_str[0];
+
+			if (sort == 'A') {
+				std::cout << "Alphabetical! [A] Ascending or [D] Desending:";
+				std::getline(std::cin, sort_str);
+				sort = sort_str[0];
+				if (sort == 'A') {//ascending alphabetical order
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_brand() < b->get_brand();
+						});
+				}
+				else if (sort == 'D') {//descending alphabetical order
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_brand() > b->get_brand();
+						});
+				}
+			}
+			else if (sort == 'P') {
+				std::cout << "By Price! [A] Ascending or [D] Desending:";
+				std::getline(std::cin, sort_str);
+				sort = sort_str[0];
+				if (sort == 'A') {//ascending order by price
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_price() < b->get_price();
+						});
+				}
+				else if (sort == 'D') {//descending order by price
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_price() > b->get_price();
+						});
+				}
+			}
+			else if (sort == 'Z') {
+				std::cout << "By Quantity! [A] Ascending or [D] Desending:";
+				std::getline(std::cin, sort_str);
+				sort = sort_str[0];
+				if (sort == 'A') {//ascending order by quantity
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_quantity() < b->get_quantity();
+						});
+				}
+				else if (sort == 'D') {//descending order by quantity
+					std::sort(store.begin(), store.end(), [](const product* a, const product* b) {
+						return a->get_quantity() > b->get_quantity();
+						});
+				}
+			}
+
+			// Print sorted list
+			std::cout << "\nSorted Product List:\n";
+			for (int i = 0; i < store.size(); i++) {
+				store[i]->print();
+			}
+			break;
+		}
 			break;
 		case 'L'://login (not logged in)
 			if (current_user.get_user() == "None") {
@@ -1387,15 +1973,161 @@ Goodbye! ^-^
 		}
 		case 'R'://reserve product (logged in)
 			if (current_user.get_user() != "None") {
-				//reserve product code goes here
+				for (int i = 0; i < store.size(); i++) {
+					store[i]->print();
+				}
+				std::cout << std::endl;
+				while (true) {
+					std::string product_id_str;
+					std::cout << "\nWhich product would you like to add to your cart?" << std::endl;
+					std::cout << "Enter product ID Number or [Q] to quit: ";
+					std::getline(std::cin, product_id_str);
+
+					if (product_id_str == "q" || product_id_str == "Q") {
+						break;
+					}
+
+
+					int prod_id;
+					try {
+						prod_id = std::stoi(product_id_str);
+					}
+					catch (...) {
+						std::cout << "Invalid input. Please enter a numeric ID or 'Q' to quit." << std::endl;
+						continue;
+					}
+
+
+					product* selected_product = nullptr;
+					for (int i = 0; i < store.size(); i++) {
+						if (store.at(i)->get_id() == prod_id) {
+							selected_product = store.at(i);
+							break;
+						}
+					}
+
+					if (selected_product == nullptr) {
+						std::cout << "No product found with ID: " << prod_id << std::endl;
+						continue; // ask again
+					}
+
+					// Ask for confirmation
+					std::cout << "\nAdd to cart? Brand: " << selected_product->get_brand()
+						<< " | ID: " << selected_product->get_id()
+						<< "\nConfirm [Y]es / [N]o: ";
+					std::string confirmation_str;
+					std::getline(std::cin, confirmation_str);
+
+					if (confirmation_str.empty()) {
+						std::cout << "INVALD INPUT.\n";
+						continue;
+					}
+
+					char confirmation = std::toupper(confirmation_str[0]);
+
+					if (confirmation == 'Y') {
+						shopping_cart.push_back(selected_product);
+						std::cout << std::endl << "Product added to your cart.\n";
+						selected_product->set_reserved(selected_product->get_reserved() + 1);
+						break;
+					}
+					else if (confirmation == 'N') {
+						std::cout << std::endl << "PRODUCT NOT ADDED TO YOUR CART \n";
+						continue;
+					}
+					else {
+						std::cout << std::endl << "COMMAND NOT RECOGNIZED\n";
+						continue;
+					}
+				}
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
 			}
 			break;
-		case 'V'://view reserved products (logged in)
+		case 'V'://view and buy reserved products (logged in)
 			if (current_user.get_user() != "None") {
-				//view reserved products code goes here
+				if (shopping_cart.empty()) {
+					std::cout << "Your shopping cart is empty." << std::endl;
+				}
+				else {
+					std::cout << "--"<< current_user.get_user() << "'s SHOPPING CART--" << std::endl;
+					for (int i = 0; i < shopping_cart.size(); i++) {
+						shopping_cart.at(i)->print();
+					}
+					std::cout << std::endl;
+
+					std::cout << "Would you like to purchase something from your cart? Y/y & N/n only: ";
+					std::string confirm;
+					std::getline(std::cin, confirm);
+					if (confirm == "menu") {
+						break;
+					}
+					std::transform(confirm.begin(), confirm.end(), confirm.begin(), ::toupper);
+					char confirmation = confirm[0];
+					
+					if (confirmation == 'Y') {
+						while (true) {
+							std::string product_id_str;
+							std::cout << "\nWhich product would you like to purchase from your cart?" << std::endl;
+							std::cout << "Enter product ID Number or [Q] to quit: ";
+							std::getline(std::cin, product_id_str);
+
+							if (product_id_str == "q" || product_id_str == "Q") {
+								break;
+							}
+
+
+							int prod_id;
+							try {
+								prod_id = std::stoi(product_id_str);
+							}
+							catch (...) {
+								std::cout << "Invalid input. Please enter a numeric ID or 'Q' to quit." << std::endl;
+								continue;
+							}
+
+							int i = 0;
+							product* selected_product = nullptr;
+							for (i; i < store.size(); i++) {
+								if (store.at(i)->get_id() == prod_id) {
+									selected_product = store.at(i);
+									break;
+								}
+							}
+
+							if (selected_product == nullptr) {
+								std::cout << "No product found with ID: " << prod_id << std::endl;
+								continue; // ask again
+							}
+							else {
+								buy_product(store, store, i);
+								std::vector<product*>::iterator it = shopping_cart.begin();	//takes care of erasing the value and resizing the vector
+								int j = 0;
+								while (j < shopping_cart.size()) {
+									if (shopping_cart[j]->get_id() == prod_id) {
+										break;
+									}
+									if (shopping_cart[j]->get_id() != prod_id) {
+										it++;
+									}
+									j++;
+								}
+								shopping_cart.erase(it);
+
+
+								break;
+							}
+						}
+					}
+					else if (confirmation == 'N') {
+						std::cout << std::endl << "Alright, no worries." << std::endl << std::endl;
+					}
+					else {
+
+					}
+
+				}
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
@@ -1414,7 +2146,7 @@ Goodbye! ^-^
 			break;
 		case 'E'://edit item (admin)
 			if (current_user.get_is_admin() == 'Y' || current_user.get_is_admin() == 'C') {
-				//edit item code goes here
+				edit_product(store);
 			}
 			else {
 				std::cout << "Command not recognized. Please try again." << std::endl << std::endl;
@@ -1452,22 +2184,6 @@ Goodbye! ^-^
 				break;
 			}
 			else if (dlt_account.length() >= 3 && dlt_account.length() <= 20) {
-				/*std::for_each(users.begin(), users.end(), [&dlt_account, &users](const login& l) {
-					int position = std::distance(users.begin(),)
-					if (l.get_user() == dlt_account) {
-						users.erase();
-					}
-					});*/			//I tried using this but realized it was really hard to get the iterator's position, so I just went with a index for loop
-					/*for (int i = 0; i < users.size(); i++) {
-
-						if (users[i].get_user() == dlt_account) {
-							account_found == true;
-						}
-						if (users[i].get_user() != dlt_account && account_found==false) {
-							it++;
-						}
-
-						}*/
 				std::vector<login>::iterator it = users.begin();
 				int i = 0;
 				while (i < users.size()) {
@@ -1570,5 +2286,5 @@ Goodbye! ^-^
 			std::cout<< "Command not recognized. Please try again." << std::endl << std::endl;
 		}
 	}
-
+	//I don't know why this is giving me an error, it compiles perfectly :/
 }
