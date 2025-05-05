@@ -341,7 +341,6 @@ void add_product(std::vector<product*> &store, int max_ids[]) {
 			}
 		}
 		//field one below
-		std::cout << clothing_type << std::endl;
 		if (clothing_type == "shirt") {
 			while (field_one < 14 || field_one > 20) {
 				std::cout << "What is the collar size? Reminder that it must be between 14-20: ";
@@ -841,6 +840,7 @@ void edit_product(std::vector<product*>& store) {
 			if (store[i]->get_id() == id) {
 				product* triggered_product = store[i];
 				triggered_product->print();
+				break;
 			}
 			i++;
 		}
@@ -850,6 +850,7 @@ void edit_product(std::vector<product*>& store) {
 			//Start editing fields
 			char command = 'a';
 			while (command !='M') {
+				value = -1;
 				std::cout << "B for brand, P for price, S for rating, Q for quantity, R for reserved, 1 for the first size field, 2 for the second size field, m when you're done: ";
 				std::string get_command;
 				std::getline(std::cin, get_command);
@@ -1522,7 +1523,7 @@ int main() {
 			std::mt19937 generator(std::random_device{}());
 			std::uniform_int_distribution<int> distribution(1, 100000000000);
 			std::cout << "Alright! Here we go! MAMIMUM FORCE ON!!!" << std::endl << std::endl;
-			for (int i = 0; i < 3000; i++) {
+			for (int i = 0; i < 2000; i++) {
 				int jargon = distribution(generator);
 				std::cout << jargon << std::endl;
 			}
